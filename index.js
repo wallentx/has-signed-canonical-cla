@@ -55,6 +55,8 @@ async function run() {
 
   const commit_authors_map = new Map();
   for (const commit of commits.data) {
+    // Check if the commit message contains a license header that matches
+    // one of the licenses granting implicit CLA approval
     if (commit['commit']['message']) {
       const goodLicense = hasImplicitLicense(commit['commit']['message']);
       if (goodLicense) {
