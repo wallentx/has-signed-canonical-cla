@@ -114,6 +114,13 @@ async function run() {
       continue;
     }
 
+    try {
+      await ghRepo.request('GET /users/' + username);
+    } catch (error) {
+      console.log('- ' + username + ' ✕ (GitHub user does not exist)');
+      continue;
+    }
+
     await ghCLA.request('GET /orgs/{org}/members/{username}', {
       org: 'CanonicalContributorAgreement',
       username: username
