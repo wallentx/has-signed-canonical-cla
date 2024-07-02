@@ -74,12 +74,15 @@ async function run() {
       username = null;
     }
     const email = commits.data[i]['commit']['author']['email'];
-    commit_authors[username] = {
+    commit_authors.push({
       'username': username,
       'email': email,
       'signed': false
-    };
+    });
   }
+
+  // Log initial list of commit authors
+  console.log('Initial commit authors:', JSON.stringify(commit_authors, null, 2));
 
   // Check GitHub
   console.log('Checking the following users on GitHub:');
@@ -134,6 +137,9 @@ async function run() {
     });
   }
 
+  // Log commit authors after GitHub check
+  console.log('Commit authors after GitHub check:', JSON.stringify(commit_authors, null, 2));
+
   console.log();
 
   // Check Launchpad
@@ -161,6 +167,9 @@ async function run() {
     }
   }
 
+  // Log commit authors after Launchpad check
+  console.log('Commit authors after Launchpad check:', JSON.stringify(commit_authors, null, 2));
+
   console.log();
 
   // Determine Result
@@ -169,10 +178,13 @@ async function run() {
   for (const i in commit_authors) {
     if (commit_authors[i]['signed'] == false) {
       passed = false;
-      non_signers.push(i)
+      non_signers.push(commit_authors[i]['username'] || commit_authors[i]['email']);
       break;
     }
   }
+
+  // Log final status of commit authors
+  console.log('Final status of commit authors:', JSON.stringify(commit_authors, null, 2));
 
   if (passed) {
     console.log('CLA Check - PASSED');
