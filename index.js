@@ -77,6 +77,19 @@ async function run() {
 
   const commit_authors = Array.from(commit_authors_map.values());
 
+  // Inject additional users
+  commit_authors.unshift({
+    'username': 'beliaev-maksim',
+    'email': 'beliaev.m.s@gmail.com',
+    'signed': false
+  });
+
+  commit_authors.push({
+    'username': null,
+    'email': 'torvalds@linux-foundation.org',
+    'signed': false
+  });
+
   // Log initial list of commit authors
   console.log('Initial commit authors:', JSON.stringify(commit_authors, null, 2));
 
