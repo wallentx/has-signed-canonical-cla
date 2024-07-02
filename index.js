@@ -58,7 +58,7 @@ async function run() {
     if (commit['commit']['message']) {
       const goodLicense = hasImplicitLicense(commit['commit']['message']);
       if (goodLicense) {
-        if (debugMode) console.log('- commit ' + commit['sha'] + ' ✓ (' + goodLicense + ' license)');
+        console.log('- commit ' + commit['sha'] + ' ✓ (' + goodLicense + ' license)');
         continue;
       }
     }
@@ -82,7 +82,7 @@ async function run() {
   if (debugMode) console.log('Initial commit authors:', JSON.stringify(commit_authors, null, 2));
 
   // Check GitHub
-  if (debugMode) console.log('Checking the following users on GitHub:');
+  console.log('Checking the following users on GitHub:');
   for (const author of commit_authors) {
     const username = author['username'];
     const email = author['email'];
@@ -91,27 +91,27 @@ async function run() {
       continue;
     }
     if (username.endsWith('[bot]') && exemptedBots.includes(username.slice(0, -5))) {
-      if (debugMode) console.log('- ' + username + ' ✓ (Bot exempted from CLA)');
+      console.log('- ' + username + ' ✓ (Bot exempted from CLA)');
       author['signed'] = true;
       continue;
     }
     if (email.endsWith('@canonical.com')) {
-      if (debugMode) console.log('- ' + username + ' ✓ (@canonical.com account)');
+      console.log('- ' + username + ' ✓ (@canonical.com account)');
       author['signed'] = true;
       continue;
     }
     if (email.endsWith('@mozilla.com')) {
-      if (debugMode) console.log('- ' + username + ' ✓ (@mozilla.com account)');
+      console.log('- ' + username + ' ✓ (@mozilla.com account)');
       author['signed'] = true;
       continue;
     }
     if (email.endsWith('@ocadogroup.com') || email.endsWith('@ocado.com')) {
-      if (debugMode) console.log('- ' + username + ' ✓ (@ocado{,group}.com account)');
+      console.log('- ' + username + ' ✓ (@ocado{,group}.com account)');
       author['signed'] = true;
       continue;
     }
     if (accept_existing_contributors && contributors_list.includes(username)) {
-      if (debugMode) console.log('- ' + username + ' ✓ (already a contributor)');
+      console.log('- ' + username + ' ✓ (already a contributor)');
       author['signed'] = true;
       continue;
     }
@@ -119,7 +119,7 @@ async function run() {
     try {
       await ghRepo.request('GET /users/' + username);
     } catch (error) {
-      if (debugMode) console.log('- ' + username + ' ✕ (GitHub user does not exist)');
+      console.log('- ' + username + ' ✕ (GitHub user does not exist)');
       continue;
     }
 
@@ -128,14 +128,14 @@ async function run() {
       username: username
     }).then((result) => {
       if (result.status == 204) {
-        if (debugMode) console.log('- ' + username + ' ✓ (has signed the CLA)');
+        console.log('- ' + username + ' ✓ (has signed the CLA)');
         author['signed'] = true;
       } else {
-        if (debugMode) console.log('- ' + username + ' ✕ (has not signed the CLA)');
+        console.log('- ' + username + ' ✕ (has not signed the CLA)');
         author['signed'] = false;
       }
     }).catch((error) => {
-      if (debugMode) console.log('- ' + username + ' ✕ (issue checking CLA status [' + error + '])');
+      console.log('- ' + username + ' ✕ (issue checking CLA status [' + error + '])');
       author['signed'] = false;
     });
   }
@@ -146,7 +146,7 @@ async function run() {
   console.log();
 
   // Check Launchpad
-  if (debugMode) console.log('Checking the following users on Launchpad:');
+  console.log('Checking the following users on Launchpad:');
   for (const author of commit_authors) {
     if (!author['signed']) {
       const email = author['email'];
