@@ -65,8 +65,9 @@ async function run() {
     const username = commit['author'] ? commit['author']['login'] : null;
     const email = commit['commit']['author']['email'];
 
-    if (!commit_authors_map.has(username || email)) {
-      commit_authors_map.set(username || email, {
+    const key = username || email;
+    if (!commit_authors_map.has(key)) {
+      commit_authors_map.set(key, {
         'username': username,
         'email': email,
         'signed': false
